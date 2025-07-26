@@ -1,3 +1,5 @@
+print("🔥 Running data_loader.py")
+
 import os
 import pandas as pd
 from pymongo import MongoClient
