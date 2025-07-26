@@ -1,25 +1,31 @@
-if __name__ == "__main__":
-    print("[INFO] Running data_loader.py...")
+import os
+import pandas as pd
+from pymongo import MongoClient
 
-    from pymongo import MongoClient
-    import pandas as pd
+# MongoDB connection
+client = MongoClient("mongodb://localhost:27017/")
+db = client["chatbot_db"]
 
-    # Connect to MongoDB
-    client = MongoClient("mongodb://localhost:27017/")
-    db = client["chatbot"]
+# Define path to CSVs
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+data_dir = os.path.join(BASE_DIR, "..", "..", "data")
 
-    print("[INFO] Connected to MongoDB")
+products_path = os.path.join(data_dir, "products.csv")
+orders_path = os.path.join(data_dir, "orders.csv")
 
-    # Load and insert products
-    products_df = pd.read_csv("products.csv")
+# Load CSVs
+try:
+    products_df = pd.read_csv(products_path)
+    orders_df = pd.read_csv(orders_path)
+
+    # Insert into MongoDB
     db.products.delete_many({})
-    db.products.insert_many(products_df.to_dict(orient="records"))
-    print(f"[INFO] Inserted {len(products_df)} products.")
-
-    # Load and insert orders
-    orders_df = pd.read_csv("orders.csv")
     db.orders.delete_many({})
-    db.orders.insert_many(orders_df.to_dict(orient="records"))
-    print(f"[INFO] Inserted {len(orders_df)} orders.")
 
-    print("[SUCCESS] Data loading complete.")
+    db.products.insert_many(products_df.to_dict(orient="records"))
+    db.orders.insert_many(orders_df.to_dict(orient="records"))
+
+    print("✅ Data loaded successfully into MongoDB.")
+
+except Exception as e:
+    print(f"❌ Failed to load data: {e}")
