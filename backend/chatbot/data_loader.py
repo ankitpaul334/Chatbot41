@@ -1,32 +1,25 @@
-import pandas as pd
-from pymongo import MongoClient
-import os
+if __name__ == "__main__":
+    print("[INFO] Running data_loader.py...")
 
-# Connect to MongoDB
-client = MongoClient("mongodb://localhost:27017/")
-db = client["ecommerce"]
+    from pymongo import MongoClient
+    import pandas as pd
 
-# CSV file paths relative to backend/chatbot/
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_DIR = os.path.join(BASE_DIR, "../../ecommerce-dataset")
+    # Connect to MongoDB
+    client = MongoClient("mongodb://localhost:27017/")
+    db = client["chatbot"]
 
-products_path = os.path.join(DATA_DIR, "products.csv")
-orders_path = os.path.join(DATA_DIR, "orders.csv")
-inventory_path = os.path.join(DATA_DIR, "inventory.csv")
+    print("[INFO] Connected to MongoDB")
 
-# Load CSVs into pandas
-products_df = pd.read_csv(products_path)
-orders_df = pd.read_csv(orders_path)
-inventory_df = pd.read_csv(inventory_path)
+    # Load and insert products
+    products_df = pd.read_csv("products.csv")
+    db.products.delete_many({})
+    db.products.insert_many(products_df.to_dict(orient="records"))
+    print(f"[INFO] Inserted {len(products_df)} products.")
 
-# Clean insert (remove old)
-db.products.delete_many({})
-db.orders.delete_many({})
-db.inventory.delete_many({})
+    # Load and insert orders
+    orders_df = pd.read_csv("orders.csv")
+    db.orders.delete_many({})
+    db.orders.insert_many(orders_df.to_dict(orient="records"))
+    print(f"[INFO] Inserted {len(orders_df)} orders.")
 
-# Insert into MongoDB
-db.products.insert_many(products_df.to_dict("records"))
-db.orders.insert_many(orders_df.to_dict("records"))
-db.inventory.insert_many(inventory_df.to_dict("records"))
-
-print("✅ Data loaded into MongoDB successfully!")
+    print("[SUCCESS] Data loading complete.")
