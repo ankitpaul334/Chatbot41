@@ -19,9 +19,14 @@ data_dir = os.path.abspath(os.path.join(BASE_DIR, "..", "..", "data"))
 products_path = os.path.join(data_dir, "products.csv")
 orders_path = os.path.join(data_dir, "orders.csv")
 
+print(f"BASE_DIR: {BASE_DIR}")
+print(f"data_dir: {data_dir}")
+
 print("📁 Checking if files exist...")
-print("🗂️ Products exists:", os.path.exists(products_path))
-print("🗂️ Orders exists:", os.path.exists(orders_path))
+print(f"🗂️ Products exists: {os.path.exists(products_path)}")
+print(f"🗂️ Orders exists: {os.path.exists(orders_path)}")
+print(f"🗂️ Products is file: {os.path.isfile(products_path)}")
+print(f"🗂️ Orders is file: {os.path.isfile(orders_path)}")
 
 print(f"📂 Products path: {products_path}")
 print(f"📂 Orders path: {orders_path}")
