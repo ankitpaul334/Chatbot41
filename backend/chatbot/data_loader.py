@@ -15,9 +15,15 @@ print("🧩 Connected to MongoDB")
 
 # Define path to CSVs
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-data_dir = os.path.join(BASE_DIR, "..", "..", "data")
+# Resolve absolute paths
+print("📁 Checking if files exist...")
+print("🗂️ Products exists:", os.path.exists(products_path))
+print("🗂️ Orders exists:", os.path.exists(orders_path))
+
+data_dir = os.path.abspath(os.path.join(BASE_DIR, "..", "..", "data"))
 products_path = os.path.join(data_dir, "products.csv")
 orders_path = os.path.join(data_dir, "orders.csv")
+
 
 print(f"📂 Products path: {products_path}")
 print(f"📂 Orders path: {orders_path}")
