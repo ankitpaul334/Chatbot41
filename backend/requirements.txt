@@ -1,2 +1,9 @@
+ HEAD
 Flask==2.3.2
 pandas==2.2.1
+
+fastapi
+uvicorn
+pandas
+python-multipart
+5bf2c3f6 (Milestone Done)
